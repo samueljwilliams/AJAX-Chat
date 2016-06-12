@@ -2049,7 +2049,11 @@ var ajaxChat = {
 	},
 
 	handleLogout: function(url) {
-		window.location.href = url;
+		var queryStringDivider = '?';
+		if (/\?/.test(url)) {
+			queryStringDivider = '&';
+		}
+		window.location.href = url+queryStringDivider+"userId="+this.userID;
 	},
 
 	toggleSetting: function(setting, buttonID) {
