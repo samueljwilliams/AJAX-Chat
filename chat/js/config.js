@@ -173,7 +173,8 @@ var ajaxChatConfig = {
 		':help:',
 		':error:',
 		':warning:',
-		':favorite:'
+		':favorite:',
+		':kai:'
  	],
 
  	// Defines the list of emoticon files associated with the emoticon codes:
@@ -200,7 +201,8 @@ var ajaxChatConfig = {
 		'help.png',
 		'error.png',
 		'warning.png',
-		'favorite.png'
+		'favorite.png',
+		'kai1.gif'
 	],
 
 	// Defines the available sounds loaded on chat start:

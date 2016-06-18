@@ -401,6 +401,8 @@ class AJAXChat {
 				return false;
 			}
 		}
+
+		$_COOKIE['ajax_user_id'] = $userData['userID'];
 		
 		// Check if user is banned:
 		if($userData['userRole'] != AJAX_CHAT_ADMIN && $this->isUserBanned($userData['userName'], $userData['userID'], $_SERVER['REMOTE_ADDR'])) {
@@ -1010,12 +1012,26 @@ class AJAXChat {
 						// Kick user and insert message:
 						$channel = $this->getChannelFromID($kickUserID);
 						$banMinutes = (count($textParts) > 2) ? $textParts[2] : null;
-						$this->kickUser($textParts[1], $banMinutes, $kickUserID);
+						if (count($textParts) > 3){
+							$banReason = '';
+							for ($i=3; $i < count($textParts); $i++) {
+								$banReason .= $textParts[$i] . ' ';
+							}
+						}
+
+						$this->kickUser($textParts[1], $banMinutes, $kickUserID, $banReason);
 						// If no channel found, user logged out before he could be kicked
 						if($channel !== null) {
 							$this->insertChatBotMessage(
 								$channel,
 								'/kick '.$textParts[1],
+								null,
+								1
+							);
+
+							$this->insertChatBotMessage(
+								$channel,
+								$textParts[1] . ' has been banned for ' . $banMinutes . ' minutes for ' . $banReason . ' :kai:',
 								null,
 								1
 							);
@@ -1622,7 +1638,7 @@ class AJAXChat {
 		return mt_rand(1, $sides);
 	}
 	
-	function kickUser($userName, $banMinutes=null, $userID=null) {
+	function kickUser($userName, $banMinutes=null, $userID=null, $banReason=null) {
 		if($userID === null) {
 			$userID = $this->getIDFromName($userName);
 		}
@@ -1634,7 +1650,7 @@ class AJAXChat {
 
 		if($banMinutes) {
 			// Ban User for the given time in minutes:
-			$this->banUser($userName, $banMinutes, $userID);
+			$this->banUser($userName, $banMinutes, $userID, $banReason);
 		}
 
 		// Remove given User from online list:
@@ -1716,7 +1732,7 @@ class AJAXChat {
 		return $this->getBannedUsersData('userName');
 	}
 	
-	function banUser($userName, $banMinutes=null, $userID=null) {
+	function banUser($userName, $banMinutes=null, $userID=null,$banReason=null) {
 		if($userID === null) {
 			$userID = $this->getIDFromName($userName);
 		}
@@ -1738,13 +1754,15 @@ class AJAXChat {
 					userID,
 					userName,
 					dateTime,
-					ip
+					ip,
+					banReason
 				)
 				VALUES (
 					'.$this->db->makeSafe($userID).',
 					'.$this->db->makeSafe($userName).',
 					DATE_ADD(NOW(), interval '.$this->db->makeSafe($banMinutes).' MINUTE),
-					'.$this->db->makeSafe($this->ipToStorageFormat($ip)).'
+					'.$this->db->makeSafe($this->ipToStorageFormat($ip)).',
+					'.$this->db->makeSafe($banReason).'
 				);';	
 		
 		// Create a new SQL query:

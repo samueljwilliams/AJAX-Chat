@@ -1,0 +1,1 @@
+ALTER TABLE ajax_chat_bans ADD banReason VARCHAR(255) NULL;

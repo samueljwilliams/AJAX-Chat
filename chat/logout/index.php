@@ -34,7 +34,7 @@ if(!$config['dbConnection']['link']) {
 }
 unset($config['dbConnection']);
 
-$sql = "SELECT userName, dateTime, NOW() as currentTime FROM $table WHERE userID = $userId";
+$sql = "SELECT userName, dateTime, banReason, NOW() as currentTime FROM $table WHERE userID = $userId";
 $result = $db->sqlQuery($sql);
 
 $row = $result->fetch();
@@ -45,10 +45,15 @@ if (is_null($row)) {
 } else {
     $banExpiration = new DateTime($row['dateTime']);
     $now = new DateTime($row['currentTime']);
+    $banReason = null;
 
     if ($banExpiration < $now) {
         header('Location: ../');
         exit;
+    }
+
+    if (!empty($row['banReason'])) {
+        $banReason = ' for ' . $row['banReason'];
     }
 
     $interval = $banExpiration->diff($now);
@@ -88,7 +93,7 @@ if (is_null($row)) {
 </head>
 <body class="ajax-chat" onload="initializeLoginPage();">
 <div id="loginContent">
-    <h2>You have been Banned for <?php echo $banDuration; ?></h2>
+    <h2>You have been Banned for <?php echo $banDuration . $banReason; ?></h2>
     <h3>Enjoy your Trip to the Moon</h3>
     <script>
         setTimeout(function () {
