@@ -1380,6 +1380,9 @@ class AJAXChat {
 		
 		if(!$this->onNewMessage($text))
 			return;
+
+		if(!$this->allowURLPosting($text))
+			return;
 		
 		$text = $this->replaceCustomText($text);
 		
@@ -1493,6 +1496,23 @@ class AJAXChat {
 		if($this->getConfig('allowGuestWrite'))
 			return true;
 		return false;
+	}
+
+	function allowURLPosting($message) {
+		if ($this->getUserRole() == AJAX_CHAT_GUEST) {
+			$regExUrl = "@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.\,]*(\?\S+)?)?)*)@";
+
+			if (preg_match($regExUrl, $message)) {
+				$this->insertChatBotMessage(
+					$this->getPrivateMessageID(),
+					'Guests cannot post links, please read the rules'
+				);
+
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	function insertChatBotMessage($channelID, $messageText, $ip=null, $mode=0) {
