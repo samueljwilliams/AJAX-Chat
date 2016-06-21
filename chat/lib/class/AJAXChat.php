@@ -1499,7 +1499,14 @@ class AJAXChat {
 	}
 
 	function allowURLPosting($message) {
-		if ($this->getUserRole() == AJAX_CHAT_GUEST) {
+		$isPrivate = false;
+		if (preg_match('@^/msg.*@', $message)) {
+			$isPrivate = true;
+		}
+
+		error_log($isPrivate);
+
+		if ($this->getUserRole() == AJAX_CHAT_GUEST && !$isPrivate) {
 			$regExUrl = "@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.\,]*(\?\S+)?)?)*)@";
 
 			if (preg_match($regExUrl, $message)) {
