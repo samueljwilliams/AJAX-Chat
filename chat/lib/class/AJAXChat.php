@@ -1019,7 +1019,8 @@ class AJAXChat {
 							}
 						}
 
-						$this->kickUser($textParts[1], $banMinutes, $kickUserID, $banReason);
+						$auditAdminReason = $banReason . ', you were kicked by ' . $this->getUserName();
+						$this->kickUser($textParts[1], $banMinutes, $kickUserID, $auditAdminReason);
 						// If no channel found, user logged out before he could be kicked
 						if($channel !== null) {
 							$this->insertChatBotMessage(
