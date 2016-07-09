@@ -1031,7 +1031,7 @@ class AJAXChat {
 
 							$this->insertChatBotMessage(
 								$channel,
-								$textParts[1] . ' has been banned for ' . $banMinutes . ' minutes for ' . $banReason . ' :kai:',
+								$this->getUserName() . ' has kicked ' . $textParts[1] . ' for ' . $banMinutes . ' minutes for ' . $banReason . ' :kai:',
 								null,
 								1
 							);
