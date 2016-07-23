@@ -458,16 +458,14 @@ class AJAXChat {
 		$this->addInfoMessage($this->getChannel(), 'channelID');
 		$this->addInfoMessage($this->getChannelName(), 'channelName');
 		
-        if ($this->getUserRole() > 0) {
-            // Login message:
-            $text = '/login '.$this->getUserName();
-            $this->insertChatBotMessage(
-                $this->getChannel(),
-                $text,
-                null,
-                1
-            );
-        }
+		// Login message:
+		$text = '/login '.$this->getUserName();
+		$this->insertChatBotMessage(
+			$this->getChannel(),
+			$text,
+			null,
+			1
+		);	
 	}
 
 	function getValidRequestChannelID() {
@@ -1896,15 +1894,13 @@ class AJAXChat {
 				$this->removeUserFromOnlineUsersData($row['userID']);
 				
 				// Insert logout timeout message:
-                if ($this->getUserRole()) {
-                    $text = '/logout '.$row['userName'].' Timeout';
-                    $this->insertChatBotMessage(
-                        $row['channel'],
-                        $text,
-                        null,
-                        1
-                    );
-                }
+				$text = '/logout '.$row['userName'].' Timeout';
+				$this->insertChatBotMessage(
+					$row['channel'],
+					$text,
+					null,
+					1
+				);
 			}
 			
 			$result->free();
