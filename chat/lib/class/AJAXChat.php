@@ -529,14 +529,17 @@ class AJAXChat {
 		if($type !== null) {
 			$type = ' '.$type;
 		}
-		// Logout message
-		$text = '/logout '.$this->getUserName().$type;
-		$this->insertChatBotMessage(
-			$this->getChannel(),
-			$text,
-			null,
-			1
-		);
+        
+        if ($this->getUserRole() > 0) {
+            // Logout message
+            $text = '/logout '.$this->getUserName().$type;
+            $this->insertChatBotMessage(
+                $this->getChannel(),
+                $text,
+                null,
+                1
+            );
+        }
 	}
 	
 	function switchChannel($channelName) {
