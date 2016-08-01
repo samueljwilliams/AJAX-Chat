@@ -1510,8 +1510,6 @@ class AJAXChat {
 			$isPrivate = true;
 		}
 
-		error_log($isPrivate);
-
 		if ($this->getUserRole() == AJAX_CHAT_GUEST && !$isPrivate) {
 			$regExUrl = "@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.\,]*(\?\S+)?)?)*)@";
 
